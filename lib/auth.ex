@@ -20,7 +20,10 @@ defmodule GCloudex.Auth do
 
   # Compute Engine scopes
   @compute_read_only          "https://www.googleapis.com/auth/compute.readonly"
-  @compute                    "https://www.googleapis.com/auth/compute"  
+  @compute                    "https://www.googleapis.com/auth/compute"
+
+  # Datastore scopes
+  @datastore                  "https://www.googleapis.com/auth/datastore"
 
   @doc """
   Retrieves an authentication token for the Google Cloud Storage service.
@@ -49,7 +52,7 @@ defmodule GCloudex.Auth do
         get_token_response |> Map.get(:token)
 
       :sql_admin ->
-        {:ok, get_token_response} = 
+        {:ok, get_token_response} =
           GoogleAuth.for_scope @sql_scope_admin
 
         get_token_response |> Map.get(:token)
@@ -66,15 +69,19 @@ defmodule GCloudex.Auth do
         get_token_response |> Map.get(:token)
 
       :compute_read_only ->
-        {:ok, get_token_response} = 
+        {:ok, get_token_response} =
           GoogleAuth.for_scope @compute_read_only
 
         get_token_response |> Map.get(:token)
 
       :compute ->
-        {:ok, get_token_response} = 
+        {:ok, get_token_response} =
           GoogleAuth.for_scope @compute
 
+        get_token_response |> Map.get(:token)
+
+      :datastore ->
+        {:ok, get_token_response} = GoogleAuth.for_scope @datastore
         get_token_response |> Map.get(:token)
     end
   end
