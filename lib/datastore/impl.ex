@@ -4,19 +4,42 @@ defmodule GCloudex.Datastore.Impl do
       use GCloudex.Datastore.Request
 
       @project_id   GCloudex.get_project_id
-      @run_query_ep "https://datastore.googleapis.com/v1beta3/projects/#{@project_id}:runQuery"
+      @base_endpoint "https://datastore.googleapis.com/v1beta3/projects/#{@project_id}:"
 
-      #################
-      ### Run Query ###
-      #################
+      @spec allocate_ids(query :: map) :: HTTPResponse.t
+      def allocate_ids(query) do
+        make_request("allocateIds", query)
+      end
 
-      @doc """
-      List instances from the project.
-      """
+      @spec begin_transaction(query :: map) :: HTTPResponse.t
+      def begin_transaction(query) do
+        make_request("beginTransaction", query)
+      end
+
+      @spec commit(query :: map) :: HTTPResponse.t
+      def commit(query) do
+        make_request("commit", query)
+      end
+
       @spec query(query :: map) :: HTTPResponse.t
       def query(query) do
+        make_request("runQuery", query)
+      end
+
+      @spec rollback(query :: map) :: HTTPResponse.t
+      def rollback(query) do
+        make_request("rollback", query)
+      end
+
+      @spec lookup(query :: map) :: HTTPResponse.t
+      def lookup(query) do
+        make_request("lookup", query)
+      end
+
+      defp make_request(endpoint, query) do
         body = query |> Poison.encode!
-        request :post, @run_query_ep, ["Content-Type": "application/json"], body
+        url = @base_endpoint <> endpoint
+        request :post, url, ["Content-Type": "application/json"], body
       end
     end
   end
